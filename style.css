@@ -1,0 +1,41 @@
+@import url('https://fonts.googleapis.com/css2?family=BBH+Sans+Hegarty&display=swap');
+
+/*Altera o estilo do corpo da página */
+body {
+    background-color: rgb(255, 176, 255);
+
+}
+h1 {
+    font-family: "BBH Sans Hegarty";
+    color: rgb(222, 44, 103);
+}
+
+.card {
+    background-color: pink;
+}
+
+input[type="text"] {
+    background-color: #ffe5ec;
+    color: white;
+    border: 1px solid #fff0f3;
+}
+
+#btn-nova-tarefa:hover {
+    background-color: #ff85a1;
+    color: whitesmoke;
+}
+
+.list-group-item {
+    background-color: #fbb1bd;
+    border: #ffe5ec;
+}
+
+.btn-success {
+    background-color: #ea9ab2;
+    border: #ff85a1;
+}
+
+.btn-danger {
+    background-color: #ea9ab2;
+     border: #ff85a1;
+}
