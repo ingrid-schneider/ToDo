@@ -5,7 +5,7 @@ body {
     background-color: rgb(255, 176, 255);
 
 }
-h1 {
+h1.titulo {
     font-family: "BBH Sans Hegarty";
     color: rgb(222, 44, 103);
 }
@@ -30,12 +30,12 @@ input[type="text"] {
     border: #ffe5ec;
 }
 
-.btn-success {
+.btn-concluir {
     background-color: #ea9ab2;
     border: #ff85a1;
 }
 
-.btn-danger {
+.btn-excluir {
     background-color: #ea9ab2;
      border: #ff85a1;
 }
