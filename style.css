@@ -39,3 +39,8 @@ input[type="text"] {
     background-color: #ea9ab2;
      border: #ff85a1;
 }
+
+.dragging {
+    opacity: 0.5;
+    background: #e9ecef;
+}

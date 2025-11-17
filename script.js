@@ -33,12 +33,23 @@ function iniciaToDo() {
     // Associa função "adicionarTarefaEnter()" ao evento de pressionar qualquer tecla 
     // no campo de "Adicionar nova tarefa"
     txt_nova_tarefa.addEventListener("keypress", adicionarTarefaEnter);
+
+    const arrayTarefas = obterTarefasDoNavegador();
+    salvarCookieTarefas([]);
+    arrayTarefas.forEach(strTarefa => {
+        adicionarTarefa(strTarefa);
+    });
+
+    lista_tarefas.querySelectorAll("li").forEach(li => makeDraggable(li));
 }
 
-function adicionarTarefa() {
+function adicionarTarefa(strTarefa) {
+    if (typeof strTarefa !== 'string' || strTarefa == null) {
+        strTarefa = txt_nova_tarefa.value;
+    }
     // Se a caixa de texto de "Adicionar nova tarefa" não está vazia
     // .trim() remove espaços em branco do começo e fim do calor do campo
-    if (txt_nova_tarefa.value.trim() !== "") {
+    if (strTarefa.trim() !== "") {
         const btn_item = `
                 <div>
                     <button class="btn btn-success btn-sm me-2 btn-concluir"onclick="concluirTarefa(this)">Concluir</button>
@@ -53,7 +64,19 @@ function adicionarTarefa() {
         // "span" permite aplicar formação em linha
         //"w-75" limita o nome da tarefa á 75% do tamanho da linha, deixando 25% do tamanho que excedem 75% do tamanho da linha
         // "text-truncate" corta e adiciona reticencias (tres pontos...) em nomes de tarefas que excedem 75% do tamanh da linha
-        item.innerHTML = "<span class='w-75 text-truncate'>" + txt_nova_tarefa.value + "</span>" + btn_item;
+        item.innerHTML = "<span class='w-75 text-truncate'>" + strTarefa + "</span>" + btn_item;
+        
+        makeDraggable(item);
+        item.addEventListener("dragend", () => {
+            let arrayTarefas = [];
+            Array.from(lista_tarefas.children).forEach(i => {
+                i.classList.remove('over')
+                arrayTarefas.push(i.querySelector("span").textContent);
+            });
+            salvarCookieTarefas(arrayTarefas);
+        });
+
+        adicionarTarefaAoCookie(strTarefa);
         
         // Adicona o item a lista de tarefas
         lista_tarefas.append(item);
@@ -88,6 +111,9 @@ function concluirTarefa(btn_concluir) {
 }  
 
 function excluirTarefa() {
+    const arrayTarefas = obterTarefasDoNavegador();
+    arrayTarefas.splice(id_tarefa_excluir, 1);
+    salvarCookieTarefas(arrayTarefas);
     // Remove o item da lista de tarefas
     lista_tarefas.removeChild(lista_tarefas.children[id_tarefa_excluir]);
     // Fecha modal de "Excluir tarefa"
@@ -103,9 +129,40 @@ function obterIDTarefaExcluir (btn) {
     const tarefas = Array.from(lista_tarefas.children);
     id_tarefa_excluir = tarefas.indexOf(item);
     
-}
+}// ---------------------------------------------------------
+// 3. COOKIE
 // ---------------------------------------------------------
-// 3. ESCUTADORES DE EVENTOS E INÍCIO
+
+const CHAVE_TAREFAS_TODO = 'tarefas_todo';
+
+function obterTarefasDoNavegador() {
+    try {
+        const cookie = localStorage.getItem(CHAVE_TAREFAS_TODO);
+        if (cookie) {
+            return JSON.parse(cookie);
+        }
+    } catch (e) {
+        console.error("Falha ao ler o cookie do armazenamento local.");
+    }
+    return[];
+}
+
+function salvarCookieTarefas(arrayTarefas) {
+    try {
+        localStorage.setItem(CHAVE_TAREFAS_TODO, JSON.stringify(arrayTarefas));
+    } catch (e) {
+        console.error("ERRO: Falah ao salvar as tarefas no navegador. Error:", e);
+    }
+}
+
+function adicionarTarefaAoCookie(strTarefa) {
+    const arrayTarefas = obterTarefasDoNavegador();
+    arrayTarefas.push(strTarefa);
+    salvarCookieTarefas(arrayTarefas);
+}
+
+// ---------------------------------------------------------
+// 4. ESCUTADORES DE EVENTOS E INÍCIO
 // ---------------------------------------------------------
 
 iniciaToDo();
